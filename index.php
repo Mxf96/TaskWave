@@ -7,7 +7,7 @@
             <h1 class="fw-light">Bienvenue sur TaskWave</h1>
             <p class="lead text-muted">Gérez vos tâches et projets en toute simplicité avec TaskWave, votre outil de planification tout-en-un.</p>
             <p>
-                <a href="#" class="btn btn-primary my-2">Commencer maintenant</a>
+            <a href="#" onclick="handleStartNowClick()" class="btn btn-primary my-2">Commencer maintenant</a>
                 <a href="#" class="btn btn-secondary my-2">En savoir plus</a>
             </p>
         </div>
@@ -55,4 +55,16 @@
     </div>
 </div>
 
+
+<script>
+function handleStartNowClick() {
+    <?php if(isset($_SESSION['isLoggedIn']) && $_SESSION['isLoggedIn']): ?>
+        // L'utilisateur est connecté, redirigez vers la page de création de projet
+        window.location.href = '/dashboards/dashboard.php'; // Remplacez par le chemin réel
+    <?php else: ?>
+        // L'utilisateur n'est pas connecté, redirigez vers la page de connexion
+        window.location.href = '/logs/login.php';
+    <?php endif; ?>
+}
+</script>
 <?php require 'includes/inc-bottom.php'; ?>
