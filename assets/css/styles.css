@@ -1,0 +1,7 @@
+.footer-custom a {
+    text-decoration: none;
+    color: white; 
+}
+.footer-custom a:hover {
+    text-decoration: underline;
+}
