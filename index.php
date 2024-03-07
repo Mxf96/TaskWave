@@ -58,7 +58,7 @@
 
 <script>
 function handleStartNowClick() {
-    <?php if(isset($_SESSION['isLoggedIn']) && $_SESSION['isLoggedIn']): ?>
+    <?php if(isset($_SESSION['userID']) && $_SESSION['userID']): ?>
         // L'utilisateur est connecté, redirigez vers la page de création de projet
         window.location.href = '/dashboards/dashboard.php'; // Remplacez par le chemin réel
     <?php else: ?>

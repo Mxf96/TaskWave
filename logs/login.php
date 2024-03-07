@@ -1,6 +1,7 @@
 <?php
 require '../includes/inc-top-form.php';
 require_once '../includes/inc-db-connect.php';
+require '../managers/sanitize_input-manager.php';
 
 $email = $_SESSION['data']['email'] ?? '';
 $error = $_SESSION['error'] ?? '';
@@ -32,7 +33,7 @@ unset($_SESSION['error'], $_SESSION['success'], $_SESSION['data']);
                     <form action="login-POST.php" method="post">
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>">
+                            <input type="email" class="form-control" id="email" name="email" value="<?php echo sanitize_input($email); ?>">
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Mot de passe</label>

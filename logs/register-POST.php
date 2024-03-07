@@ -1,5 +1,5 @@
 <?php
-require '../includes/inc-db-connect.php';
+require_once '../includes/inc-db-connect.php';
 require_once '../managers/sanitize_input-manager.php';
 
 // Récupération et nettoyage des données du formulaire

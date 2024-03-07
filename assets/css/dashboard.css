@@ -1,0 +1,109 @@
+.dropdown-menu li a {
+    color: #333333ab;
+}
+
+.dropdown-menu li a:hover {
+    color: #000000;
+}
+
+.h4 {
+    font-weight: bold;
+    color: #3333337f;
+    margin-top: 10px;
+    font-size: medium;
+}
+
+.a {
+    font-style: italic;
+    color: #333;
+    font-size: small;
+    text-decoration: none;
+}
+
+/* navbar title board */
+.tableau-label {
+    font-weight: bold;
+}
+
+.tableau-title {
+    font-style: italic;
+}
+
+
+/* Style pour le newBoard */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1040;
+    display: none; 
+}
+
+/* Style pour le formulaire apparaissant au milieu */
+#formContainer {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1050; /* Au-dessus du backdrop */
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
+    display: none; /* Masqué par défaut */
+}
+
+
+/* Style pour les listes */ 
+.listForm {
+    background-color: #33333339;
+    width: 100%;
+    margin-top: 20px;
+    border-radius: 10px;
+}
+
+.taskForm {
+    background-color: #33333339;
+    width: 90%;
+    margin-bottom: 20px;
+    margin-top: 1px;
+    margin-left: 15px;
+    border-radius: 10px;
+}
+
+.list-card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: 0.3s;
+    border-radius: 5px; 
+}
+
+.list-card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card-body h5 {
+    color: #007bff; 
+}
+
+.card-text {
+    color: #555;
+}
+
+.card-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+

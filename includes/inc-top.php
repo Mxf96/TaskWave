@@ -33,7 +33,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Contact</a>
                     </li>
-                    <?php if (isset($_SESSION['isLoggedIn']) && $_SESSION['isLoggedIn']) : ?>
+                    <?php if (isset($_SESSION['userID']) && $_SESSION['userID']) : ?>
                         <li class="nav-item">
                         <a class="nav-link" href="#" onclick="confirmLogout()">Déconnexion</a>
                         </li>
@@ -46,5 +46,3 @@
             </div>
         </div>
     </nav>
-
-<script src="../scripts/logout.js"></script>

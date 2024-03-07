@@ -1,5 +1,5 @@
 <?php
-require '../includes/inc-db-connect.php';
+require_once '../includes/inc-db-connect.php';
 require_once '../managers/sanitize_input-manager.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -21,8 +21,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($user && password_verify($password, $user['password'])) {
         // Enregistrement des données de l'utilisateur dans la session
-        $_SESSION['isLoggedIn'] = true;
-        $_SESSION['user_id'] = $user['id']; // Assurez-vous que votre table users a une colonne 'id'
+        $_SESSION['userID'] = true;
+        $_SESSION['userID'] = $user['userID']; // Assurez-vous que votre table users a une colonne 'userID'
         header("Location: ../index.php");
         exit();
     } else {

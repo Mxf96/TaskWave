@@ -1,5 +1,7 @@
 <?php 
-require_once '../includes/inc-top-form.php'; // Assurez-vous que ce fichier inclut les balises <html>, <head> et ouvre la balise <body>
+require_once '../includes/inc-top-form.php'; 
+require_once '../includes/inc-db-connect.php';
+require '../managers/sanitize_input-manager.php';
 
 // Initialisation des variables avec des chaînes vides
 $firstName = $lastName = $email = "";
@@ -28,15 +30,15 @@ if(isset($_SESSION['error'])){
                     <form action="register-POST.php" method="post">
                         <div class="mb-3">
                             <label for="firstName" class="form-label">Prénom</label>
-                            <input type="text" class="form-control" id="firstName" name="firstName" value="<?php echo htmlspecialchars($firstName); ?>" autofocus>
+                            <input type="text" class="form-control" id="firstName" name="firstName" value="<?php echo sanitize_input($firstName); ?>" autofocus>
                         </div>
                         <div class="mb-3">
                             <label for="lastName" class="form-label">Nom</label>
-                            <input type="text" class="form-control" id="lastName" name="lastName" value="<?php echo htmlspecialchars($lastName); ?>">
+                            <input type="text" class="form-control" id="lastName" name="lastName" value="<?php echo sanitize_input($lastName); ?>">
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Adresse email</label>
-                            <input type="email" class="form-control" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>">
+                            <input type="email" class="form-control" id="email" name="email" value="<?php echo sanitize_input($email); ?>">
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Mot de passe</label>
