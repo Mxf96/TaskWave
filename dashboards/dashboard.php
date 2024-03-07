@@ -115,18 +115,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['taskTitle']) && isset(
                         <div class="navbar-nav">
                             <?php if (isset($boardDetails)) : ?>
                                 <a class="nav-link active" aria-current="page" href="#">
-                                    <span style="font-weight: bold;">Tableau :</span>
-                                    <span style="font-style: italic;"><?php echo sanitize_input($boardDetails['title']); ?></span>
+                                    <span style="font-weight: bold; font-size: large;">Tableau :</span>
+                                    <span style="font-style: italic; font-size: small;"><?php echo sanitize_input($boardDetails['title']); ?></span>
                                 </a>
                                 <a class="nav-link active" aria-current="page" href="#">
-                                    <span style="font-weight: bold;">Description :</span>
-                                    <span style="font-style: italic;"><?php echo sanitize_input($boardDetails['description']); ?></span>
+                                    <span style="font-weight: bold; font-size: large;">Description :</span>
+                                    <span style="font-style: italic; font-size: small;">
+                                        <?php
+                                        $description = sanitize_input($boardDetails['description']);
+                                        echo (mb_strlen($description) > 20) ? mb_substr($description, 0, 20) . "..." : $description;
+                                        ?>
+                                    </span>
                                 </a>
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMemberModal">
-                                    Ajouter un membre
-                                </button>
                             <?php endif; ?>
-                            <!-- Vous pouvez ajouter d'autres liens ou boutons ici selon vos besoins -->
+                        </div>
+                        <div class="ms-auto">
+                            <button type="button" class="btn btn-primary buttonMember" data-bs-toggle="modal" data-bs-target="#addMemberModal">Ajouter un membre</button>
                         </div>
                     </div>
                     <?php if (isset($_GET['boardID']) && !empty($_GET['boardID'])) : ?>
@@ -157,7 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['taskTitle']) && isset(
                             <div class="col-md-4 p-4"> <!-- Ajustez la classe col-md-4 selon la largeur désirée -->
                                 <div class="card list-card" style="width: 100%;"> <!-- Ajustez ou supprimez style="width: 18rem;" selon le besoin -->
                                     <div class="card-body card-content">
-                                        <span class="badge bg-danger"><?php echo htmlspecialchars($list['position']); ?></span>
+                                        <span class="badge bg-success"><?php echo htmlspecialchars($list['position']); ?></span>
                                         <h6 class="card-title"><?php echo htmlspecialchars($list['title']); ?></h6>
                                     </div>
                                     <div>
