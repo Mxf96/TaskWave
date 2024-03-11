@@ -47,17 +47,63 @@
 }
 
 /* Style pour le formulaire apparaissant au milieu */
-#formContainer {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1050; /* Au-dessus du backdrop */
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, .5);
-    display: none; /* Masqué par défaut */
+/* Modal Customizations */
+.modal-header {
+    background-color: #007bff; /* Primary color */
+    color: white;
+}
+
+.modal-header .modal-title {
+    font-weight: bold;
+}
+
+.modal-header .close {
+    color: white;
+    opacity: 1;
+}
+
+.modal-body {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.modal-content {
+    border-radius: 0.5rem; /* Rounded corners for the modal */
+}
+
+.list-group-item {
+    border: none; /* Remove list-group borders */
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.list-group-item strong {
+    color: #007bff; /* Highlight board title */
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem; /* Adjust button padding */
+    font-size: 0.875rem; /* Smaller font size for buttons */
+}
+
+.btn-success {
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.btn-danger {
+    color: #fff;
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.modal-footer {
+    border-top: none; /* Remove footer border */
+}
+
+.modal-footer .btn-secondary {
+    background-color: #6c757d; /* Secondary button color */
 }
 
 
