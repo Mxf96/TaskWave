@@ -159,7 +159,7 @@ $memberBoards = getUserMemberBoards($dbh, $userID);
                                 <?php endif; ?>
                             </div>
                             <div class="ms-auto">
-                                <button type="button" class="btn btn-primary buttonMember" data-bs-toggle="modal" data-bs-target="#addMemberModal">Ajouter un membre</button>
+                                <button type="button" class="btn btn-primary buttonMember" data-bs-toggle="modal" data-bs-target="#addMemberModal"><a href="../members/members.php" class="text-white" style="text-decoration: none;">Ajouter un membre</a></button>
                             </div>
                         </div>
                     <?php endif; ?>
