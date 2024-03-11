@@ -16,6 +16,23 @@ if (isset($_SESSION['userID'])) {
 
 $lists = [];
 
+// Ajout du traitement du formulaire de création de tableau
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['boardTitle'])) {
+    $boardTitle = $_POST['boardTitle'];
+    $boardDescription = $_POST['boardDescription'] ?? ''; // Utilisez l'opérateur null coalescent si le champ peut être vide
+
+    // Appel à la fonction pour créer un nouveau tableau et récupération de l'ID du tableau créé
+    $newBoardID = createNewDashboard($dbh, $boardTitle, $boardDescription, $userID);
+
+    if ($newBoardID) {
+        // Redirection vers la page du tableau nouvellement créé
+        header("Location: http://taskwave.local/dashboards/dashboard.php?boardID=$newBoardID");
+        exit; // Assurez-vous d'appeler exit après une redirection pour arrêter l'exécution du script
+    } else {
+        echo "<p>Erreur lors de la création du tableau.</p>";
+    }
+}
+
 if (isset($_GET['boardID']) && !empty($_GET['boardID'])) {
     $boardID = $_GET['boardID'];
     $query = "SELECT * FROM boards WHERE boardID = ? AND userID = ?";
@@ -25,6 +42,10 @@ if (isset($_GET['boardID']) && !empty($_GET['boardID'])) {
 
     $lists = getListsByBoardID($dbh, $boardID);
 }
+
+$boardID = getCurrentBoardID();
+
+$boardDetails = getBoardDetails($dbh, $boardID);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['listTitle']) && isset($_GET['boardID']) && !empty($_GET['boardID'])) {
     $listTitle = $_POST['listTitle'];
@@ -50,6 +71,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['taskTitle']) && isset(
     }
 }
 
+// Après avoir récupéré les tableaux possédés par l'utilisateur
+$memberBoards = getUserMemberBoards($dbh, $userID);
+
 ?>
 <div class="container-fluid">
     <div class="row">
@@ -67,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['taskTitle']) && isset(
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/dashboards/members/members.php" class="nav-link">
+                        <a href="../members/members.php" class="nav-link">
                             Membres
                         </a>
                     </li>
@@ -94,9 +118,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['taskTitle']) && isset(
                 <!-- ici on affiche les tableaux que le user possède -->
                 <ul class="nav nav-pills flex-column mb-auto">
                     <li class="nav-item">
-                        <h4 href="" class="h4">Autres projets :</h4>
-                        <!-- ici on affiche les tableaux que le user fait partie -->
+                        <h4 class="h4">Autres projets :</h4>
                     </li>
+                    <?php foreach ($memberBoards as $board) : ?>
+                        <li class="nav-item">
+                            <a href="/dashboards/dashboard.php?boardID=<?php echo htmlspecialchars($board['boardID']); ?>" class="a">
+                                <?php echo htmlspecialchars($board['title']); ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
                 </ul>
             </div>
         </div>
@@ -105,52 +135,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['taskTitle']) && isset(
             <!-- Main Content -->
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
-                    <?php if (!isset($_GET['boardID'])) : ?>
+                    <?php if (!isset($_GET['boardID']) || $_GET['boardID'] === '') : ?>
                         <a class="navbar-brand" href="#">Bienvenue sur votre tableau de bord TaskWave</a>
-                    <?php endif; ?>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                        <div class="navbar-nav">
-                            <?php if (isset($boardDetails)) : ?>
-                                <a class="nav-link active" aria-current="page" href="#">
-                                    <span style="font-weight: bold; font-size: large;">Tableau :</span>
-                                    <span style="font-style: italic; font-size: small;"><?php echo sanitize_input($boardDetails['title']); ?></span>
-                                </a>
-                                <a class="nav-link active" aria-current="page" href="#">
-                                    <span style="font-weight: bold; font-size: large;">Description :</span>
-                                    <span style="font-style: italic; font-size: small;">
-                                        <?php
-                                        $description = sanitize_input($boardDetails['description']);
-                                        echo (mb_strlen($description) > 20) ? mb_substr($description, 0, 20) . "..." : $description;
-                                        ?>
-                                    </span>
-                                </a>
-                            <?php endif; ?>
-                        </div>
-                        <div class="ms-auto">
-                            <button type="button" class="btn btn-primary buttonMember" data-bs-toggle="modal" data-bs-target="#addMemberModal">Ajouter un membre</button>
-                        </div>
-                    </div>
-                    <?php if (isset($_GET['boardID']) && !empty($_GET['boardID'])) : ?>
-                        <div class="col-md-4">
-                            <div class="p-4 listForm">
-                                <form method="POST" action="dashboard.php?boardID=<?php echo htmlspecialchars($_GET['boardID']); ?>">
-                                    <div class="row">
-                                        <div class="col">
-                                            <input type="text" class="form-control" placeholder="Créer une nouvelle liste" id="listTitle" name="listTitle" required>
-                                        </div>
-                                        <div class="col-auto">
-                                            <button type="submit" class="btn btn-primary mb-3">Créer</button>
-                                        </div>
-                                    </div>
-                                </form>
+                    <?php else : ?>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                            <div class="navbar-nav">
+                                <?php if (isset($boardDetails) && $boardDetails !== false) : ?>
+                                    <a class="nav-link active" aria-current="page" href="#">
+                                        <span style="font-weight: bold; font-size: large;">Tableau :</span>
+                                        <span style="font-style: italic; font-size: small;"><?php echo htmlspecialchars($boardDetails['title']); ?></span>
+                                    </a>
+                                    <a class="nav-link active" aria-current="page" href="#">
+                                        <span style="font-weight: bold; font-size: large;">Description :</span>
+                                        <span style="font-style: italic; font-size: small;">
+                                            <?php
+                                            $description = htmlspecialchars($boardDetails['description']);
+                                            echo (mb_strlen($description) > 20) ? mb_substr($description, 0, 20) . "..." : $description;
+                                            ?>
+                                        </span>
+                                    </a>
+                                <?php endif; ?>
+                            </div>
+                            <div class="ms-auto">
+                                <button type="button" class="btn btn-primary buttonMember" data-bs-toggle="modal" data-bs-target="#addMemberModal">Ajouter un membre</button>
                             </div>
                         </div>
                     <?php endif; ?>
                 </div>
             </nav>
+
 
             <div class="row">
                 <?php if (isset($_GET['boardID']) && !empty($_GET['boardID'])) : ?>
@@ -169,7 +185,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['taskTitle']) && isset(
                                             <?php if (!empty($tasks)) : ?>
                                                 <ul class="list-group list-group-flush">
                                                     <?php foreach ($tasks as $task) : ?>
-                                                        <li class="list-group-item"><?php echo htmlspecialchars($task['title']); ?></li>
+                                                        <li class="list-group-item border-bottom pb-2"><?php echo htmlspecialchars($task['title']); ?></li>
                                                     <?php endforeach; ?>
                                                 </ul>
                                             <?php else : ?>
@@ -202,19 +218,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['taskTitle']) && isset(
             </div>
         </div>
     </div>
-    <!-- Container for the form -->
-    <div class="p-4" id="formContainer">
-        <form id="createDashboardForm" method="POST">
-            <div class="mb-3">
-                <label for="dashboardTitle" class="form-label">Title</label>
-                <input type="text" class="form-control" id="dashboardTitle" name="dashboardTitle" required>
+    <!-- Create Board Modal -->
+    <div class="modal fade" id="createBoardModal" tabindex="-1" aria-labelledby="createBoardModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createBoardModalLabel">Créer un nouveau tableau</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="" method="post">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="boardTitle" class="form-label">Titre du tableau</label>
+                            <input type="text" class="form-control" id="boardTitle" name="boardTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="boardDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="boardDescription" name="boardDescription" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <button type="submit" class="btn btn-primary">Créer</button>
+                    </div>
+                </form>
             </div>
-            <div class="mb-3">
-                <label for="dashboardDescription" class="form-label">Description</label>
-                <textarea class="form-control" id="dashboardDescription" name="dashboardDescription" rows="3" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Create</button>
-        </form>
+        </div>
     </div>
 </div>
 <?php require '../includes/inc-bottom-dashboard.php'; ?>

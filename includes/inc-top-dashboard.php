@@ -38,8 +38,9 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownCreer">
                             <li class="nav-item">
-                                <a href="#" id="creerTableau" class="nav-link">Créer un tableau</a>
+                                <a href="#" class="btn" data-bs-toggle="modal" data-bs-target="#createBoardModal">Créer un tableau</a>
                             </li>
+
                             <!-- <li><a class="dropdown-item" href="/path/to/utiliser-modele">Utiliser un modèle</a></li> -->
                         </ul>
                     </li>
@@ -48,7 +49,7 @@
                 <ul class="navbar-nav ms-auto">
                     <?php if (isset($_SESSION['userID']) && $_SESSION['userID']) : ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" onclick="confirmLogout()">Déconnexion</a>
+                        <a class="nav-link" href="#" onclick="confirmLogout(event)">Déconnexion</a>
                         </li>
                     <?php else : ?>
                         <li class="nav-item">

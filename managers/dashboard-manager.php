@@ -22,6 +22,37 @@ function createNewDashboard($dbh, $title, $description, $userID)
     }
 }
 
+function getCurrentBoardID() {
+    if (isset($_GET['boardID']) && !empty($_GET['boardID'])) {
+        $boardID = intval($_GET['boardID']); // Utilisez intval() pour s'assurer que l'ID est un entier
+        return $boardID;
+    } else {
+        return false; // Aucun ID de tableau n'est fourni
+    }
+}
+
+
+function getBoardDetails($dbh, $boardID) {
+    // Préparez la requête SQL pour récupérer les détails du tableau
+    $query = "SELECT * FROM boards WHERE boardID = :boardID";
+    
+    // Préparez et exécutez la requête
+    $stmt = $dbh->prepare($query);
+    $stmt->bindParam(':boardID', $boardID, PDO::PARAM_INT);
+    $stmt->execute();
+    
+    // Récupérez le résultat
+    $boardDetails = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    // Vérifiez si des détails ont été trouvés
+    if ($boardDetails) {
+        return $boardDetails;
+    } else {
+        return false;
+    }
+}
+
+
 function createNewList($dbh, $title, $boardID) {
     try {
         // Trouver la position la plus élevée actuelle pour le boardID donné
@@ -44,7 +75,6 @@ function createNewList($dbh, $title, $boardID) {
     }
 }
 
-
 function getListsByBoardID($dbh, $boardID) {
     try {
         $query = "SELECT * FROM `list` WHERE boardID = ?";
@@ -56,7 +86,6 @@ function getListsByBoardID($dbh, $boardID) {
         return [];
     }
 }
-
 
 function createNewTask($dbh, $title, $listID) {
     try {
@@ -80,4 +109,15 @@ function getTasksByListID($dbh, $listID) {
         error_log('Erreur lors de la récupération des tâches : ' . $e->getMessage());
         return [];
     }
+}
+
+function getUserMemberBoards($dbh, $userID) {
+    $query = "SELECT b.boardID, b.title
+              FROM boards b
+              JOIN boardmember bm ON b.boardID = bm.boardID
+              WHERE bm.userID = ? AND b.userID != ?
+              ORDER BY b.creationDate DESC";
+    $stmt = $dbh->prepare($query);
+    $stmt->execute([$userID, $userID]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }

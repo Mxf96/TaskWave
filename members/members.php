@@ -1,8 +1,8 @@
 <?php
-require '../../includes/inc-top-dashboard.php';
-require_once '../../includes/inc-db-connect.php';
-require 'member-manger.php';
-require 'sanitize_input-manager.php';
+require '../includes/inc-top-dashboard.php';
+require_once '../includes/inc-db-connect.php';
+require '../managers/member-manger.php';
+require '../managers/sanitize_input-manager.php';
 
 if (isset($_SESSION['userID'])) {
     $userID = $_SESSION['userID'];
@@ -14,7 +14,6 @@ if (isset($_SESSION['userID'])) {
     $boards = [];
 }
 
-
 if (isset($_GET['boardID']) && !empty($_GET['boardID'])) {
     $boardID = $_GET['boardID'];
     $query = "SELECT * FROM boards WHERE boardID = ? AND userID = ?";
@@ -25,11 +24,16 @@ if (isset($_GET['boardID']) && !empty($_GET['boardID'])) {
     $lists = getListsByBoardID($dbh, $boardID);
 }
 
-// Handle Add Member Form Submission
+// Ajoutez cette partie dans le bloc de traitement du formulaire après avoir vérifié si $_POST['addMemberEmail'] et $_POST['boardID'] sont définis
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addMemberEmail'], $_POST['boardID'])) {
     $addMemberEmail = $_POST['addMemberEmail'];
     $boardID = $_POST['boardID'];
-    addMemberToBoard($dbh, $addMemberEmail, $boardID, $userID);
+    
+    // Utilisez sendInvitationToBoard au lieu de addMemberToBoard
+    $message = sendInvitationToBoard($dbh, $addMemberEmail, $boardID, $userID);
+    
+    // Affichez un message basé sur le retour de la fonction
+    echo "<script>alert('" . htmlspecialchars($message) . "');</script>";
 }
 
 // Fetch board invitations for the user
@@ -37,6 +41,9 @@ $invitations = getBoardJoinRequests($dbh, $userID);
 
 // Fetch boards and their members
 $boardsMembers = getBoardsAndMembers($dbh, $userID);
+
+// Après avoir récupéré les tableaux possédés par l'utilisateur
+$memberBoards = getUserMemberBoards($dbh, $userID);
 ?>
 
 <div class="container-fluid">
@@ -55,7 +62,7 @@ $boardsMembers = getBoardsAndMembers($dbh, $userID);
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/dashboards/members/members.php" class="nav-link">
+                        <a href="../members/members.php" class="nav-link">
                             Membres
                         </a>
                     </li>
@@ -82,9 +89,15 @@ $boardsMembers = getBoardsAndMembers($dbh, $userID);
                 <!-- ici on affiche les tableaux que le user possède -->
                 <ul class="nav nav-pills flex-column mb-auto">
                     <li class="nav-item">
-                        <h4 href="" class="h4">Autres projets :</h4>
-                        <!-- ici on affiche les tableaux que le user fait partie -->
+                        <h4 class="h4">Autres projets :</h4>
                     </li>
+                    <?php foreach ($memberBoards as $board) : ?>
+                        <li class="nav-item">
+                            <a href="/dashboards/dashboard.php?boardID=<?php echo htmlspecialchars($board['boardID']); ?>" class="a">
+                                <?php echo htmlspecialchars($board['title']); ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
                 </ul>
             </div>
         </div>
@@ -120,7 +133,7 @@ $boardsMembers = getBoardsAndMembers($dbh, $userID);
                                 <ul class="list-group">
                                     <?php foreach ($invitations as $invitation) : ?>
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            Invitation to join: <strong><?php echo htmlspecialchars($invitation['boardTitle']); ?></strong>
+                                            Invitation to join: <span><?php echo htmlspecialchars($invitation['boardTitle']); ?></span>
                                             <div>
                                                 <a href="accept_invitation.php?invitationID=<?php echo $invitation['invitationID']; ?>" class="btn btn-success btn-sm">Accept</a>
                                                 <a href="reject_invitation.php?invitationID=<?php echo $invitation['invitationID']; ?>" class="btn btn-danger btn-sm">Reject</a>
@@ -138,11 +151,36 @@ $boardsMembers = getBoardsAndMembers($dbh, $userID);
                     </div>
                 </div>
             </div>
-            <!-- Modal pour ajouter un membre -->
+            <!-- Modal for Adding a Member -->
             <div class="modal fade" id="addMemberModal" tabindex="-1" aria-labelledby="addMemberModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <!-- Contenu du modal pour ajouter un membre -->
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addMemberModalLabel">Add a Member</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form method="POST" action="">
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="addMemberEmail" class="form-label">Member Email</label>
+                                    <input type="email" class="form-control" id="addMemberEmail" name="addMemberEmail" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="boardID" class="form-label">Assign to Board</label>
+                                    <select class="form-select" id="boardID" name="boardID" required>
+                                        <?php foreach ($boards as $board) : ?>
+                                            <option value="<?php echo htmlspecialchars($board['boardID']); ?>">
+                                                <?php echo htmlspecialchars($board['title']); ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Add Member</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -150,4 +188,4 @@ $boardsMembers = getBoardsAndMembers($dbh, $userID);
     </div>
 </div>
 
-<?php require '../../includes/inc-bottom-dashboard.php'; ?>
+<?php require '../includes/inc-bottom-dashboard.php'; ?>
