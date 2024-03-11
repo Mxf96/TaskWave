@@ -122,8 +122,8 @@ $memberBoards = getUserMemberBoards($dbh, $userID);
                     </li>
                     <?php foreach ($memberBoards as $board) : ?>
                         <li class="nav-item">
-                            <a href="/dashboards/dashboard.php?boardID=<?php echo htmlspecialchars($board['boardID']); ?>" class="a">
-                                <?php echo htmlspecialchars($board['title']); ?>
+                            <a href="/dashboards/dashboard.php?boardID=<?php echo sanitize_input($board['boardID']); ?>" class="a">
+                                <?php echo sanitize_input($board['title']); ?>
                             </a>
                         </li>
                     <?php endforeach; ?>
@@ -145,13 +145,13 @@ $memberBoards = getUserMemberBoards($dbh, $userID);
                                 <?php if (isset($boardDetails) && $boardDetails !== false) : ?>
                                     <a class="nav-link active" aria-current="page" href="#">
                                         <span style="font-weight: bold; font-size: large;">Tableau :</span>
-                                        <span style="font-style: italic; font-size: small;"><?php echo htmlspecialchars($boardDetails['title']); ?></span>
+                                        <span style="font-style: italic; font-size: small;"><?php echo sanitize_input($boardDetails['title']); ?></span>
                                     </a>
                                     <a class="nav-link active" aria-current="page" href="#">
                                         <span style="font-weight: bold; font-size: large;">Description :</span>
                                         <span style="font-style: italic; font-size: small;">
                                             <?php
-                                            $description = htmlspecialchars($boardDetails['description']);
+                                            $description = sanitize_input($boardDetails['description']);
                                             echo (mb_strlen($description) > 20) ? mb_substr($description, 0, 20) . "..." : $description;
                                             ?>
                                         </span>
@@ -174,15 +174,15 @@ $memberBoards = getUserMemberBoards($dbh, $userID);
                             <div class="col-md-4 p-4"> <!-- Ajustez la classe col-md-4 selon la largeur désirée -->
                                 <div class="card list-card" style="width: 100%;"> <!-- Ajustez ou supprimez style="width: 18rem;" selon le besoin -->
                                     <div class="card-body card-content">
-                                        <span class="badge bg-success"><?php echo htmlspecialchars($list['position']); ?></span>
-                                        <h6 class="card-title"><?php echo htmlspecialchars($list['title']); ?></h6>
+                                        <span class="badge bg-success"><?php echo sanitize_input($list['position']); ?></span>
+                                        <h6 class="card-title"><?php echo sanitize_input($list['title']); ?></h6>
                                     </div>
                                     <div>
                                         <div class="p-2">
                                             <?php if (!empty($tasks)) : ?>
                                                 <ul class="list-group list-group-flush">
                                                     <?php foreach ($tasks as $task) : ?>
-                                                        <li class="list-group-item border-bottom pb-2"><?php echo htmlspecialchars($task['title']); ?></li>
+                                                        <li class="list-group-item border-bottom pb-2"><?php echo sanitize_input($task['title']); ?></li>
                                                     <?php endforeach; ?>
                                                 </ul>
                                             <?php else : ?>
@@ -192,7 +192,7 @@ $memberBoards = getUserMemberBoards($dbh, $userID);
                                     </div>
                                     <div>
                                         <div class="p-2 taskForm">
-                                            <form method="POST" action="dashboard.php?boardID=<?php echo htmlspecialchars($_GET['boardID']); ?>&listID=<?php echo htmlspecialchars($list['listID']); ?>">
+                                            <form method="POST" action="dashboard.php?boardID=<?php echo sanitize_input($_GET['boardID']); ?>&listID=<?php echo sanitize_input($list['listID']); ?>">
                                                 <div class="row">
                                                     <div class="col">
                                                         <input type="text" class="form-control" placeholder="Nouvelle tâche" id="taskTitle" name="taskTitle" required>

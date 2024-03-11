@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addMemberEmail'], $_PO
     $message = sendInvitationToBoard($dbh, $addMemberEmail, $boardID, $userID);
 
     // Affichez un message basé sur le retour de la fonction
-    echo "<script>alert('" . htmlspecialchars($message) . "');</script>";
+    echo "<script>alert('" . sanitize_input($message) . "');</script>";
 }
 
 // Fetch board invitations for the user
@@ -93,8 +93,8 @@ $memberBoards = getUserMemberBoards($dbh, $userID);
                     </li>
                     <?php foreach ($memberBoards as $board) : ?>
                         <li class="nav-item">
-                            <a href="/dashboards/dashboard.php?boardID=<?php echo htmlspecialchars($board['boardID']); ?>" class="a">
-                                <?php echo htmlspecialchars($board['title']); ?>
+                            <a href="/dashboards/dashboard.php?boardID=<?php echo sanitize_input($board['boardID']); ?>" class="a">
+                                <?php echo sanitize_input($board['title']); ?>
                             </a>
                         </li>
                     <?php endforeach; ?>
@@ -133,7 +133,7 @@ $memberBoards = getUserMemberBoards($dbh, $userID);
                                 <ul class="list-group">
                                     <?php foreach ($invitations as $invitation) : ?>
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            Invitation to join: <span><?php echo htmlspecialchars($invitation['boardTitle']); ?></span>
+                                            Invitation to join: <span><?php echo sanitize_input($invitation['boardTitle']); ?></span>
                                             <div>
                                                 <a href="accept_invitation.php?invitationID=<?php echo $invitation['invitationID']; ?>" class="btn btn-success btn-sm">Accept</a>
                                                 <a href="reject_invitation.php?invitationID=<?php echo $invitation['invitationID']; ?>" class="btn btn-danger btn-sm">Reject</a>
@@ -169,8 +169,8 @@ $memberBoards = getUserMemberBoards($dbh, $userID);
                                     <label for="boardID" class="form-label">Assign to Board</label>
                                     <select class="form-select" id="boardID" name="boardID" required>
                                         <?php foreach ($boards as $board) : ?>
-                                            <option value="<?php echo htmlspecialchars($board['boardID']); ?>">
-                                                <?php echo htmlspecialchars($board['title']); ?>
+                                            <option value="<?php echo sanitize_input($board['boardID']); ?>">
+                                                <?php echo sanitize_input($board['title']); ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
