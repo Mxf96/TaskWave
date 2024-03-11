@@ -28,12 +28,7 @@ if (isset($_GET['boardID']) && !empty($_GET['boardID'])) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addMemberEmail'], $_POST['boardID'])) {
     $addMemberEmail = $_POST['addMemberEmail'];
     $boardID = $_POST['boardID'];
-
-    // Utilisez sendInvitationToBoard au lieu de addMemberToBoard
-    $message = sendInvitationToBoard($dbh, $addMemberEmail, $boardID, $userID);
-
-    // Affichez un message basé sur le retour de la fonction
-    echo "<script>alert('" . htmlspecialchars($message) . "');</script>";
+    addMemberToBoard($dbh, $addMemberEmail, $boardID, $userID);
 }
 
 // Fetch board invitations for the user
