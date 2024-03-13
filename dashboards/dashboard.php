@@ -156,20 +156,22 @@ $memberBoards = getUserMemberBoards($dbh, $userID);
                             </div>
                         </div>
                     <?php endif; ?>
-                    <div class="col-md-4">
-                        <div class="p-4 listForm">
-                            <form method="POST" action="dashboard.php?boardID=<?php echo htmlspecialchars($_GET['boardID']); ?>">
-                                <div class="row">
-                                    <div class="col">
-                                        <input type="text" class="form-control" placeholder="Créer une nouvelle liste" id="listTitle" name="listTitle" required>
+                    <?php if (isset($_GET['boardID']) && !empty($_GET['boardID'])) : ?>
+                        <div class="col-md-4">
+                            <div class="p-4 listForm">
+                                <form method="POST" action="dashboard.php?boardID=<?php echo htmlspecialchars($_GET['boardID']); ?>">
+                                    <div class="row">
+                                        <div class="col">
+                                            <input type="text" class="form-control" placeholder="Créer une nouvelle liste" id="listTitle" name="listTitle" required>
+                                        </div>
+                                        <div class="col-auto">
+                                            <button type="submit" class="btn btn-primary mb-3">Créer</button>
+                                        </div>
                                     </div>
-                                    <div class="col-auto">
-                                        <button type="submit" class="btn btn-primary mb-3">Créer</button>
-                                    </div>
-                                </div>
-                            </form>
+                                </form>
+                            </div>
                         </div>
-                    </div>
+                    <?php endif; ?>
                 </div>
             </nav>
             <div class="row">

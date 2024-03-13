@@ -55,20 +55,17 @@ $memberBoards = getUserMemberBoards($dbh, $userID);
                     <h6 class="fs-4">Espace de travail TaskWave</h6>
                 </a>
                 <hr>
-                <ul class="nav nav-pills flex-column mb-auto">
-                    <li class="nav-item">
-                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#addMemberModal">
-                            <a href="../boards/boards.php" class="nav-link active" aria-current="page">
-                            Tableaux</a>
-                        </button>
-                    </li>
-                    <li class="nav-item">
-                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#addMemberModal">
-                            <a href="../settings/settings.php" class="nav-link active">
-                            Paramètres</a>
-                        </button>
-                    </li>
-                </ul>
+                <div class="d-flex justify-content-around">
+                    <a href="../boards/boards.php" class="btn btn-primary">
+                        Tableaux
+                    </a>
+                    <a href="../members/members.php" class="btn btn-primary">
+                        Membres
+                    </a>
+                    <a href="../settings/settings.php" class="btn btn-primary">
+                        Paramètres
+                    </a>
+                </div>
             </div>
             <div class="d-flex flex-column flex-shrink-0 p-3">
                 <ul class="nav nav-pills flex-column mb-auto">
