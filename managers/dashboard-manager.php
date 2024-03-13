@@ -121,3 +121,36 @@ function getUserMemberBoards($dbh, $userID) {
     $stmt->execute([$userID, $userID]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+function getListDetails($dbh, $listID) {
+    $query = "SELECT * FROM list WHERE listID = ?";
+    $stmt = $dbh->prepare($query);
+    $stmt->execute([$listID]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+function deleteListAndTasks($dbh, $listID) {
+    try {
+        // Commencer la transaction
+        $dbh->beginTransaction();
+
+        // Supprimer toutes les tâches associées à la liste
+        $query = "DELETE FROM task WHERE listID = ?";
+        $stmt = $dbh->prepare($query);
+        $stmt->execute([$listID]);
+
+        // Supprimer la liste elle-même
+        $query = "DELETE FROM list WHERE listID = ?";
+        $stmt = $dbh->prepare($query);
+        $stmt->execute([$listID]);
+
+        // Valider la transaction
+        $dbh->commit();
+        return true;
+    } catch (Exception $e) {
+        // Une erreur est survenue, annuler la transaction
+        $dbh->rollBack();
+        error_log("Erreur lors de la suppression de la liste et de ses tâches : " . $e->getMessage());
+        return false;
+    }
+}

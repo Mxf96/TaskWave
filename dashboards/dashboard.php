@@ -78,51 +78,44 @@ $memberBoards = getUserMemberBoards($dbh, $userID);
 <div class="container-fluid">
     <div class="row">
         <!-- Left Sidebar -->
-        <div class="col-md-3" style="background-color: #f8f9fa;">
+        <div class="col-md-3 bg-light">
             <div class="d-flex flex-column flex-shrink-0 p-3">
                 <a href="/dashboards/dashboard.php" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
                     <h6 class="fs-4">Espace de travail TaskWave</h6>
                 </a>
                 <hr>
-                <ul class="nav nav-pills flex-column mb-auto">
-                    <li class="nav-item">
-                        <a href="../boards/boards.php" class="nav-link active" aria-current="page">
-                            Tableaux
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="../members/members.php" class="nav-link">
-                            Membres
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="../settings/settings.php" class="nav-link">
-                            Paramètres
-                        </a>
-                    </li>
-                </ul>
+                <div class="d-flex justify-content-around">
+                    <a href="../boards/boards.php" class="btn btn-primary">
+                        Tableaux
+                    </a>
+                    <a href="../members/members.php" class="btn btn-primary">
+                        Membres
+                    </a>
+                    <a href="../settings/settings.php" class="btn btn-primary">
+                        Paramètres
+                    </a>
+                </div>
             </div>
-            <div class="d-flex flex-column flex-shrink-0 p-3">
+            <div class="d-flex flex-column flex-shrink-0 p-1">
                 <ul class="nav nav-pills flex-column mb-auto">
                     <li class="nav-item">
                         <h4 class="h4">Vos tableaux :</h4>
                     </li>
                     <?php foreach ($boards as $board) : ?>
                         <li class="nav-item">
-                            <a href="/dashboards/dashboard.php?boardID=<?php echo $board['boardID']; ?>" class="a">
+                            <a href="/dashboards/dashboard.php?boardID=<?php echo $board['boardID']; ?>" class="a border-bottom pb-1">
                                 <?php echo sanitize_input($board['title']); ?>
                             </a>
                         </li>
                     <?php endforeach; ?>
                 </ul>
-                <!-- ici on affiche les tableaux que le user possède -->
                 <ul class="nav nav-pills flex-column mb-auto">
                     <li class="nav-item">
                         <h4 class="h4">Autres projets :</h4>
                     </li>
                     <?php foreach ($memberBoards as $board) : ?>
                         <li class="nav-item">
-                            <a href="/dashboards/dashboard.php?boardID=<?php echo sanitize_input($board['boardID']); ?>" class="a">
+                            <a href="/dashboards/dashboard.php?boardID=<?php echo sanitize_input($board['boardID']); ?>" class="a border-bottom pb-1">
                                 <?php echo sanitize_input($board['title']); ?>
                             </a>
                         </li>
@@ -163,19 +156,43 @@ $memberBoards = getUserMemberBoards($dbh, $userID);
                             </div>
                         </div>
                     <?php endif; ?>
+                    <div class="col-md-4">
+                        <div class="p-4 listForm">
+                            <form method="POST" action="dashboard.php?boardID=<?php echo htmlspecialchars($_GET['boardID']); ?>">
+                                <div class="row">
+                                    <div class="col">
+                                        <input type="text" class="form-control" placeholder="Créer une nouvelle liste" id="listTitle" name="listTitle" required>
+                                    </div>
+                                    <div class="col-auto">
+                                        <button type="submit" class="btn btn-primary mb-3">Créer</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </nav>
             <div class="row">
                 <?php if (isset($_GET['boardID']) && !empty($_GET['boardID'])) : ?>
                     <?php if (!empty($lists)) : ?>
                         <?php foreach ($lists as $list) : ?>
-                            <?php $tasks = getTasksByListID($dbh, $list['listID']); // Récupère les tâches pour cette liste 
+                            <?php $tasks = getTasksByListID($dbh, $list['listID']);
                             ?>
-                            <div class="col-md-4 p-4"> <!-- Ajustez la classe col-md-4 selon la largeur désirée -->
-                                <div class="card list-card" style="width: 100%;"> <!-- Ajustez ou supprimez style="width: 18rem;" selon le besoin -->
-                                    <div class="card-body card-content">
-                                        <span class="badge bg-success"><?php echo sanitize_input($list['position']); ?></span>
-                                        <h6 class="card-title"><?php echo sanitize_input($list['title']); ?></h6>
+                            <div class="col-md-4 p-4">
+                                <div class="card list-card" style="width: 100%;">
+                                    <div class="card-body card-content d-flex justify-content-between">
+                                        <span>
+                                            <span class="badge bg-success"><?php echo sanitize_input($list['position']); ?></span>
+                                            <h6 class="card-title d-inline"><?php echo sanitize_input($list['title']); ?></h6>
+                                        </span>
+                                        <div class="dropdown">
+                                            <a class="btn bg-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                            </a>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                <li><a class="dropdown-item" href="#">Modifier</a></li>
+                                                <li><a class="dropdown-item" href="delete-list.php?listID=<?php echo htmlspecialchars($list['listID']); ?>">Supprimer</a></li>
+                                            </ul>
+                                        </div>
                                     </div>
                                     <div>
                                         <div class="p-2">

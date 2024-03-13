@@ -49,7 +49,7 @@ $memberBoards = getUserMemberBoards($dbh, $userID);
 <div class="container-fluid">
     <div class="row">
         <!-- Left Sidebar -->
-        <div class="col-md-3" style="background-color: #f8f9fa;">
+        <div class="col-md-3 bg-light">
             <div class="d-flex flex-column flex-shrink-0 p-3">
                 <a href="/dashboards/dashboard.php" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
                     <h6 class="fs-4">Espace de travail TaskWave</h6>
@@ -57,19 +57,16 @@ $memberBoards = getUserMemberBoards($dbh, $userID);
                 <hr>
                 <ul class="nav nav-pills flex-column mb-auto">
                     <li class="nav-item">
-                        <a href="../boards/boards.php" class="nav-link active" aria-current="page">
-                            Tableaux
-                        </a>
+                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#addMemberModal">
+                            <a href="../boards/boards.php" class="nav-link active" aria-current="page">
+                            Tableaux</a>
+                        </button>
                     </li>
                     <li class="nav-item">
-                        <a href="../members/members.php" class="nav-link">
-                            Membres
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="../settings/settings.php" class="nav-link">
-                            Paramètres
-                        </a>
+                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#addMemberModal">
+                            <a href="../settings/settings.php" class="nav-link active">
+                            Paramètres</a>
+                        </button>
                     </li>
                 </ul>
             </div>
@@ -86,7 +83,6 @@ $memberBoards = getUserMemberBoards($dbh, $userID);
                         </li>
                     <?php endforeach; ?>
                 </ul>
-                <!-- ici on affiche les tableaux que le user possède -->
                 <ul class="nav nav-pills flex-column mb-auto">
                     <li class="nav-item">
                         <h4 class="h4">Autres projets :</h4>
