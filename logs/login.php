@@ -22,12 +22,12 @@ unset($_SESSION['error'], $_SESSION['success'], $_SESSION['data']);
                     <h2 class="card-title text-center">Connexion</h2>
                     <?php if ($error) : ?>
                         <div class="alert alert-danger" role="alert">
-                            <?php echo $error; ?>
+                            <?php echo sanitize_input($error); ?>
                         </div>
                     <?php endif; ?>
                     <?php if ($success) : ?>
                         <div class="alert alert-success" role="alert">
-                            <?php echo $success; ?>
+                            <?php echo sanitize_input($success); ?>
                         </div>
                     <?php endif; ?>
                     <form action="login-POST.php" method="post">

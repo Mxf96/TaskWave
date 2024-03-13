@@ -74,7 +74,7 @@ $memberBoards = getUserMemberBoards($dbh, $userID);
                     </li>
                     <?php foreach ($boards as $board) : ?>
                         <li class="nav-item">
-                            <a href="/dashboards/dashboard.php?boardID=<?php echo $board['boardID']; ?>" class="a">
+                            <a href="/dashboards/dashboard.php?boardID=<?php echo sanitize_input($board['boardID']); ?>" class="a">
                                 <?php echo sanitize_input($board['title']); ?>
                             </a>
                         </li>
@@ -128,8 +128,8 @@ $memberBoards = getUserMemberBoards($dbh, $userID);
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             Invitation to join: <span><?php echo sanitize_input($invitation['boardTitle']); ?></span>
                                             <div>
-                                                <a href="accept_invitation.php?invitationID=<?php echo $invitation['invitationID']; ?>" class="btn btn-success btn-sm">Accept</a>
-                                                <a href="reject_invitation.php?invitationID=<?php echo $invitation['invitationID']; ?>" class="btn btn-danger btn-sm">Reject</a>
+                                                <a href="accept_invitation.php?invitationID=<?php echo sanitize_input($invitation['invitationID']); ?>" class="btn btn-success btn-sm">Accept</a>
+                                                <a href="reject_invitation.php?invitationID=<?php echo sanitize_input($invitation['invitationID']); ?>" class="btn btn-danger btn-sm">Reject</a>
                                             </div>
                                         </li>
                                     <?php endforeach; ?>

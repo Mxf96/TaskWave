@@ -103,7 +103,7 @@ $memberBoards = getUserMemberBoards($dbh, $userID);
                     </li>
                     <?php foreach ($boards as $board) : ?>
                         <li class="nav-item">
-                            <a href="/dashboards/dashboard.php?boardID=<?php echo $board['boardID']; ?>" class="a border-bottom pb-1">
+                            <a href="/dashboards/dashboard.php?boardID=<?php echo sanitize_input($board['boardID']); ?>" class="a border-bottom pb-1">
                                 <?php echo sanitize_input($board['title']); ?>
                             </a>
                         </li>
@@ -219,7 +219,7 @@ $memberBoards = getUserMemberBoards($dbh, $userID);
                                                     <div class="col-auto">
                                                         <button type="submit" class="btn btn-primary mb-3">Créer</button>
                                                     </div>
-                                                    <input type="hidden" name="listID" value="<?php echo $list['listID']; ?>">
+                                                    <input type="hidden" name="listID" value="<?php echo sanitize_input($list['listID']); ?>">
                                                 </div>
                                             </form>
                                         </div>

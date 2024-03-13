@@ -24,7 +24,7 @@ if(isset($_SESSION['error'])){
                     <h2 class="card-title text-center mb-4">Inscription</h2>
                     <?php if ($error): ?>
                         <div class="alert alert-danger" role="alert">
-                            <?php echo $error; ?>
+                            <?php echo sanitize_input($error); ?>
                         </div>
                     <?php endif; ?>
                     <form action="register-POST.php" method="post">
